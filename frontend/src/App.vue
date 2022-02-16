@@ -73,8 +73,8 @@ export default {
       });
       const r = await res.json();
       console.log(r);
+      this.out = r.Value
       this.running = false
-      this.out = r.Output
     },
   },
 };
