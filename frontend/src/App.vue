@@ -59,20 +59,28 @@ export default {
       console.log(r);
     },
     async runCode() {
+      if(this.running){return}
+      this.running = true
+      this.out = 'running..'
+
+      let weed = setInterval(() => {
+        this.out += '.'
+      }, 500);
+
       let data = {
         inp: this.inp,
         wheat: true,
       };
-      console.log(JSON.stringify(data));
 
-      this.running = true
       const res = await fetch("http://localhost:8008/run", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
       const r = await res.json();
-      console.log(r);
+
+      clearInterval(weed)
+      
       this.out = r.Value
       this.running = false
     },
@@ -84,7 +92,7 @@ export default {
 @import "./assets/base.css";
 
 #app {
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
 
@@ -96,7 +104,6 @@ export default {
   flex-direction: row;
   justify-content: space-between;
 
-  max-width: 600px;
   margin: 10px auto;
 }
 
@@ -119,30 +126,42 @@ button:hover {
 
 .io {
   height: 40em;
-
   display: flex;
   flex-direction: row;
 }
 
 .io textarea {
-  height: 100%;
-  flex-basis: 70%;
+  background-color: var(--color-background-black);
+  color: var(--color-heading);
+  flex-grow: 1;
   resize: none;
 }
 
-.output{
-  background-color: var(--color-background-soft);
-  flex-basis: 30%;
-  flex-grow: 0;
+.io textarea:focus-visible{
+  outline: none;
 }
+
+.output{
+  flex: 0 0 20em;
+  background-color: var(--color-background-soft);
+  flex-grow: 0;
+  overflow-x: hidden;
+
+  display: flex;
+  flex-direction: column;
+}
+
 .output-header{
+  font-size: 1.25em;
   padding: 1em;
-  border-bottom: 1px solid white;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .code-output{
   padding: 1em;
   word-break: break-all;
+  overflow-x: scroll;
+  flex-grow: 1;
 }
 
 </style>
